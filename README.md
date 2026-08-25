@@ -73,7 +73,7 @@ The frontend is Vanilla HTML/CSS/JavaScript with no bundler requirement, full En
 - GitHub Actions CI
 - Docker/PostgreSQL/Redis/Celery production path
 
-## Upgrade the current working project
+## Run Locally
 
 This ZIP deliberately does **not** include:
 
