@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      DATABASE_URL: sqlite:///./ci.db
+      AI_PROVIDER: rules
+      SHOPIFY_MODE: mock
+      GMAIL_MODE: mock
+      TASKS_MODE: sync
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate Docker Compose
+        working-directory: .
+        run: docker compose config >/dev/null
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install backend
+        run: python -m pip install -e ".[dev]"
+      - name: Compile backend
+        run: python -m compileall -q app
+      - name: Test
+        run: python -m pytest -q
+      - name: Evaluation regression
+        run: python scripts/evaluate.py
+      - name: Release safety check
+        run: python scripts/release_check.py
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check frontend JavaScript syntax
+        working-directory: frontend
+        run: |
+          find js -name '*.js' -print0 | xargs -0 -n1 node --check

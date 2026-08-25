@@ -1,0 +1,35 @@
+REAL GMAIL MVP SETUP
+
+What this update does:
+- Reads unread messages from the real Gmail inbox.
+- Processes the email through the existing AI/rules + real Shopify workflow.
+- Persists a Case.
+- Requires you to approve the Case.
+- Creates a Gmail Draft reply.
+- Automatic sending is disabled.
+- Reviewed manual sending is an explicit opt-in using GMAIL_MANUAL_SEND_ENABLED=true.
+- In production mode, manual sending also requires AUTH_MODE=password.
+
+Google OAuth files:
+- backend/credentials.json   <- downloaded from Google Cloud
+- backend/token.json         <- created automatically after first login
+
+backend/.env:
+GMAIL_MODE=live
+GMAIL_CREDENTIALS_FILE=credentials.json
+GMAIL_TOKEN_FILE=token.json
+GMAIL_QUERY=in:inbox is:unread
+
+First connection test:
+python scripts\check_gmail.py
+
+Then restart FastAPI and use the dashboard.
+
+For testing, send an unread email to the connected Gmail account containing
+a REAL Shopify order number such as #1001.
+
+Example:
+Subject: Where is my order #1001?
+Body: Hi, where is my order #1001?
+
+Do not commit credentials.json, token.json, or .env.

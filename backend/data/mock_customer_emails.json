@@ -1,0 +1,162 @@
+[
+  {
+    "id": "msg_001",
+    "sender_email": "ahmed.hassan@example.com",
+    "subject": "Where is order #8291?",
+    "body": "Hi, where is my order #8291? Tracking has not arrived yet.",
+    "expected_intent": "where_is_my_order",
+    "expected_order_number": "#8291"
+  },
+  {
+    "id": "msg_002",
+    "sender_email": "mona.ali@example.com",
+    "subject": "Where is order #8292?",
+    "body": "Hi, where is my order #8292? Tracking has not arrived yet.",
+    "expected_intent": "where_is_my_order",
+    "expected_order_number": "#8292"
+  },
+  {
+    "id": "msg_003",
+    "sender_email": "omar.samir@example.com",
+    "subject": "Where is order #8293?",
+    "body": "Hi, where is my order #8293? Tracking has not arrived yet.",
+    "expected_intent": "where_is_my_order",
+    "expected_order_number": "#8293"
+  },
+  {
+    "id": "msg_004",
+    "sender_email": "sara.adel@example.com",
+    "subject": "Where is order #8294?",
+    "body": "Hi, where is my order #8294? Tracking has not arrived yet.",
+    "expected_intent": "where_is_my_order",
+    "expected_order_number": "#8294"
+  },
+  {
+    "id": "msg_005",
+    "sender_email": "youssef.nabil@example.com",
+    "subject": "Where is order #8295?",
+    "body": "Hi, where is my order #8295? Tracking has not arrived yet.",
+    "expected_intent": "where_is_my_order",
+    "expected_order_number": "#8295"
+  },
+  {
+    "id": "msg_006",
+    "sender_email": "nour.khaled@example.com",
+    "subject": "Refund request #8296",
+    "body": "I want to return order #8296 and get a refund.",
+    "expected_intent": "return_refund",
+    "expected_order_number": "#8296"
+  },
+  {
+    "id": "msg_007",
+    "sender_email": "karim.mostafa@example.com",
+    "subject": "Refund request #8297",
+    "body": "I want to return order #8297 and get a refund.",
+    "expected_intent": "return_refund",
+    "expected_order_number": "#8297"
+  },
+  {
+    "id": "msg_008",
+    "sender_email": "laila.fathy@example.com",
+    "subject": "Refund request #8298",
+    "body": "I want to return order #8298 and get a refund.",
+    "expected_intent": "return_refund",
+    "expected_order_number": "#8298"
+  },
+  {
+    "id": "msg_009",
+    "sender_email": "tarek.hany@example.com",
+    "subject": "Refund request #8299",
+    "body": "I want to return order #8299 and get a refund.",
+    "expected_intent": "return_refund",
+    "expected_order_number": "#8299"
+  },
+  {
+    "id": "msg_010",
+    "sender_email": "hana.mahmoud@example.com",
+    "subject": "Refund request #8300",
+    "body": "I want to return order #8300 and get a refund.",
+    "expected_intent": "return_refund",
+    "expected_order_number": "#8300"
+  },
+  {
+    "id": "msg_011",
+    "sender_email": "mahmoud.ashraf@example.com",
+    "subject": "Missing item #8301",
+    "body": "Order #8301 arrived but one item is missing from the package.",
+    "expected_intent": "missing_wrong_item",
+    "expected_order_number": "#8301"
+  },
+  {
+    "id": "msg_012",
+    "sender_email": "dina.wael@example.com",
+    "subject": "Missing item #8302",
+    "body": "Order #8302 arrived but one item is missing from the package.",
+    "expected_intent": "missing_wrong_item",
+    "expected_order_number": "#8302"
+  },
+  {
+    "id": "msg_013",
+    "sender_email": "ali.reda@example.com",
+    "subject": "Missing item #8303",
+    "body": "Order #8303 arrived but one item is missing from the package.",
+    "expected_intent": "missing_wrong_item",
+    "expected_order_number": "#8303"
+  },
+  {
+    "id": "msg_014",
+    "sender_email": "mariam.emad@example.com",
+    "subject": "Missing item #8304",
+    "body": "Order #8304 arrived but one item is missing from the package.",
+    "expected_intent": "missing_wrong_item",
+    "expected_order_number": "#8304"
+  },
+  {
+    "id": "msg_015",
+    "sender_email": "mostafa.said@example.com",
+    "subject": "Missing item #8305",
+    "body": "Order #8305 arrived but one item is missing from the package.",
+    "expected_intent": "missing_wrong_item",
+    "expected_order_number": "#8305"
+  },
+  {
+    "id": "msg_016",
+    "sender_email": "reem.sameh@example.com",
+    "subject": "Modify #8306",
+    "body": "Please change the delivery address for order #8306 before shipping.",
+    "expected_intent": "cancel_modify",
+    "expected_order_number": "#8306"
+  },
+  {
+    "id": "msg_017",
+    "sender_email": "hossam.magdy@example.com",
+    "subject": "Cancel #8307",
+    "body": "Please cancel order #8307 before it ships.",
+    "expected_intent": "cancel_modify",
+    "expected_order_number": "#8307"
+  },
+  {
+    "id": "msg_018",
+    "sender_email": "salma.ibrahim@example.com",
+    "subject": "Modify #8308",
+    "body": "Please change the delivery address for order #8308 before shipping.",
+    "expected_intent": "cancel_modify",
+    "expected_order_number": "#8308"
+  },
+  {
+    "id": "msg_019",
+    "sender_email": "adel.sherif@example.com",
+    "subject": "Cancel #8309",
+    "body": "Please cancel order #8309 before it ships.",
+    "expected_intent": "cancel_modify",
+    "expected_order_number": "#8309"
+  },
+  {
+    "id": "msg_020",
+    "sender_email": "farah.gamal@example.com",
+    "subject": "Modify #8310",
+    "body": "Please change the delivery address for order #8310 before shipping.",
+    "expected_intent": "cancel_modify",
+    "expected_order_number": "#8310"
+  }
+]

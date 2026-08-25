@@ -1,0 +1,125 @@
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-ecommerce}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ecommerce}
+      POSTGRES_DB: ${POSTGRES_DB:-ecommerce_ops}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-ecommerce} -d ${POSTGRES_DB:-ecommerce_ops}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:8-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  backend:
+    build: ./backend
+    environment:
+      APP_ENV: ${APP_ENV:-development}
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-ecommerce}:${POSTGRES_PASSWORD:-ecommerce}@postgres:5432/${POSTGRES_DB:-ecommerce_ops}
+      REDIS_URL: redis://redis:6379/0
+      TASKS_MODE: ${TASKS_MODE:-celery}
+      AI_PROVIDER: ${AI_PROVIDER:-rules}
+      AI_FALLBACK_TO_RULES: ${AI_FALLBACK_TO_RULES:-true}
+      LOW_CONFIDENCE_THRESHOLD: ${LOW_CONFIDENCE_THRESHOLD:-0.75}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_MODEL: ${OPENAI_MODEL:-}
+      SHOPIFY_MODE: ${SHOPIFY_MODE:-mock}
+      SHOPIFY_SHOP: ${SHOPIFY_SHOP:-}
+      SHOPIFY_CLIENT_ID: ${SHOPIFY_CLIENT_ID:-}
+      SHOPIFY_CLIENT_SECRET: ${SHOPIFY_CLIENT_SECRET:-}
+      SHOPIFY_API_VERSION: ${SHOPIFY_API_VERSION:-2026-07}
+      GMAIL_MODE: ${GMAIL_MODE:-mock}
+      GMAIL_QUERY: ${GMAIL_QUERY:-in:inbox is:unread}
+      GMAIL_SUPPORT_ONLY: ${GMAIL_SUPPORT_ONLY:-true}
+      GMAIL_MANUAL_SEND_ENABLED: ${GMAIL_MANUAL_SEND_ENABLED:-false}
+      CORS_ORIGINS: http://localhost:3000
+      LOG_JSON: ${LOG_JSON:-true}
+      AUTH_MODE: ${AUTH_MODE:-off}
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+      SESSION_SECRET: ${SESSION_SECRET:-}
+      ALLOW_LIVE_ACTIONS: "false"
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/ready')"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  worker:
+    build: ./backend
+    command: celery -A app.tasks.celery_app:celery worker --loglevel=INFO
+    environment:
+      APP_ENV: ${APP_ENV:-development}
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-ecommerce}:${POSTGRES_PASSWORD:-ecommerce}@postgres:5432/${POSTGRES_DB:-ecommerce_ops}
+      REDIS_URL: redis://redis:6379/0
+      TASKS_MODE: celery
+      AI_PROVIDER: ${AI_PROVIDER:-rules}
+      AI_FALLBACK_TO_RULES: ${AI_FALLBACK_TO_RULES:-true}
+      LOW_CONFIDENCE_THRESHOLD: ${LOW_CONFIDENCE_THRESHOLD:-0.75}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_MODEL: ${OPENAI_MODEL:-}
+      SHOPIFY_MODE: ${SHOPIFY_MODE:-mock}
+      SHOPIFY_SHOP: ${SHOPIFY_SHOP:-}
+      SHOPIFY_CLIENT_ID: ${SHOPIFY_CLIENT_ID:-}
+      SHOPIFY_CLIENT_SECRET: ${SHOPIFY_CLIENT_SECRET:-}
+      SHOPIFY_API_VERSION: ${SHOPIFY_API_VERSION:-2026-07}
+      GMAIL_MODE: ${GMAIL_MODE:-mock}
+      GMAIL_QUERY: ${GMAIL_QUERY:-in:inbox is:unread}
+      GMAIL_SUPPORT_ONLY: ${GMAIL_SUPPORT_ONLY:-true}
+      AUTH_MODE: ${AUTH_MODE:-off}
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+      SESSION_SECRET: ${SESSION_SECRET:-}
+      ALLOW_LIVE_ACTIONS: "false"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  beat:
+    build: ./backend
+    command: celery -A app.tasks.celery_app:celery beat --loglevel=INFO
+    profiles: ["automation"]
+    environment:
+      APP_ENV: ${APP_ENV:-development}
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-ecommerce}:${POSTGRES_PASSWORD:-ecommerce}@postgres:5432/${POSTGRES_DB:-ecommerce_ops}
+      REDIS_URL: redis://redis:6379/0
+      TASKS_MODE: celery
+      GMAIL_MODE: ${GMAIL_MODE:-mock}
+      GMAIL_AUTO_POLL: ${GMAIL_AUTO_POLL:-false}
+      GMAIL_POLL_SECONDS: ${GMAIL_POLL_SECONDS:-300}
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  frontend:
+    image: nginx:1.27-alpine
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+      - ./frontend/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "127.0.0.1:3000:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  pgdata:

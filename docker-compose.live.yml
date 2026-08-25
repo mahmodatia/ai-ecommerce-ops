@@ -1,0 +1,10 @@
+services:
+  backend:
+    volumes:
+      - ./backend/credentials.json:/app/credentials.json:ro
+      - ./backend/token.json:/app/token.json
+
+  worker:
+    volumes:
+      - ./backend/credentials.json:/app/credentials.json:ro
+      - ./backend/token.json:/app/token.json
