@@ -17,7 +17,7 @@ jobs:
       GMAIL_MODE: mock
       TASKS_MODE: sync
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Validate Docker Compose
         working-directory: .
         run: docker compose config >/dev/null
